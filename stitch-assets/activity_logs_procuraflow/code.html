@@ -1,0 +1,388 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Activity &amp; Logs - VendorBridge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="assets/css2-dde5d6fbb99ce72456214dc7309886c9" rel="stylesheet">
+<link href="assets/css2-a39f5c6fcbb87b419667ec984d2e579a" rel="stylesheet">
+<link href="assets/css2-a39f5c6fcbb87b419667ec984d2e579a" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .glass-glow {
+            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.1), 0 0 20px rgba(108, 99, 255, 0.05);
+        }
+
+        .neon-text-primary {
+            text-shadow: 0 0 10px rgba(196, 192, 255, 0.3);
+        }
+
+        /* Timeline specific styles */
+        .timeline-line {
+            position: absolute;
+            left: 23px; /* Center of the icon (48px / 2 - 1px line width) */
+            top: 48px;
+            bottom: -24px;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+            z-index: 0;
+        }
+        
+        .timeline-item:last-child .timeline-line {
+            display: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#35343e",
+                        "on-secondary-container": "#ffa17c",
+                        "on-primary-fixed-variant": "#3622ca",
+                        "on-surface": "#e4e1ee",
+                        "on-primary": "#2000a4",
+                        "surface-container-high": "#2a2933",
+                        "on-tertiary-container": "#003209",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#c4c0ff",
+                        "primary-fixed-dim": "#c4c0ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#393842",
+                        "surface-container-highest": "#35343e",
+                        "on-secondary-fixed": "#370e00",
+                        "tertiary-fixed": "#b5f2af",
+                        "surface-dim": "#13121b",
+                        "on-secondary": "#5a1b00",
+                        "on-error": "#690005",
+                        "secondary-container": "#822d03",
+                        "surface-container-low": "#1b1b24",
+                        "inverse-surface": "#e4e1ee",
+                        "background": "#13121b",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#100069",
+                        "surface-container": "#1f1f28",
+                        "on-tertiary-fixed": "#002204",
+                        "outline-variant": "#464555",
+                        "surface": "#13121b",
+                        "primary-container": "#8781ff",
+                        "on-surface-variant": "#c7c4d8",
+                        "on-tertiary": "#00390b",
+                        "on-secondary-fixed-variant": "#7f2b01",
+                        "inverse-on-surface": "#302f39",
+                        "secondary-fixed": "#ffdbce",
+                        "on-primary-container": "#1b0091",
+                        "secondary": "#ffb599",
+                        "outline": "#918fa1",
+                        "on-tertiary-fixed-variant": "#1b511f",
+                        "tertiary-fixed-dim": "#9ad594",
+                        "primary": "#c4c0ff",
+                        "tertiary": "#9ad594",
+                        "inverse-primary": "#4f44e2",
+                        "secondary-fixed-dim": "#ffb599",
+                        "on-background": "#e4e1ee",
+                        "tertiary-container": "#669e63",
+                        "primary-fixed": "#e3dfff",
+                        "surface-container-lowest": "#0e0d16"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-grid": "24px",
+                        "base": "8px",
+                        "container-padding": "32px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px",
+                        "stack-lg": "40px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Space Grotesk"],
+                        "mono-data": ["Space Grotesk"],
+                        "body-md": ["Sora"],
+                        "headline-lg-mobile": ["Space Grotesk"],
+                        "display-lg": ["Space Grotesk"],
+                        "body-sm": ["Sora"],
+                        "label-caps": ["Sora"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-lg": ["Sora"]
+                    },
+                    "fontSize": {
+                        "display-md": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "mono-data": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+<!-- Top Navigation Area -->
+<nav class="sticky top-0 z-40 w-full flex justify-between items-center px-gutter-grid h-20 ml-[280px] bg-surface/80 backdrop-blur-xl border-b border-white/10 dark:bg-surface/80">
+<div class="flex items-center gap-4 w-1/3">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-[20px]">search</span>
+<input class="w-full bg-[#080808] border border-white/10 rounded-full py-2 pl-10 pr-4 text-body-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" placeholder="Search logs, events, users..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-all relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full shadow-[0_0_8px_#ffb599]"></span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-white/10">
+<div class="text-right hidden md:block">
+<p class="font-body-sm text-body-sm text-on-surface">Alex Mercer</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant">Procurement Lead</p>
+</div>
+<img alt="User Profile Avatar" class="w-10 h-10 rounded-full border border-white/10 object-cover" data-alt="A small, circular avatar portrait of a professional man with a slight smile, set against a neutral, slightly blurred background. The image is high-quality, sharp, and has a modern, corporate aesthetic suitable for a sleek SaaS dashboard profile picture." src="assets/AB6AXuD8ej1mCxxWgpDgOxSpr3NndGEKehApTo1AdirNhS6Tz5IevZEOqzhl_Vkzd5rzos50ENlCgdFvVEw1Q4Vm17gNNoDZ15i4-2d4b2b114a13171d3c843a8576a6b9cc">
+</div>
+</div>
+</nav>
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-[#0e0d16] border-r border-white/5 flex flex-col py-6 px-4 z-50">
+<div class="flex items-center px-4 mb-10"><div class="flex items-center gap-3 px-4"><div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden">https://lh3.googleusercontent.com/aida-public/AB6AXuBV2WnkheqO5nFUHGY1j2vJpFTRJ3AWRBmIUmah6k4Wmia3S9yv4CVeKQ6TsKzGfRFh_mYdIXeiylQSzxGxEYOHUTue4FH9p1iwdIKbUMt8AtHWqcV41-yAWXvakjmUctyEJrgFUaB69VsfYm3bXKN02lYe2rWAr4k1jxmu1k_Vstox5fBfCzf-qqJbeOZPD3rHq_E4d8cYIqEKcCZkpH0lkf7rMrimEF4Fu5tlUoUZ87xoKCIy9jH7a7Sqqjm8f5iqT8YCIQ80rY_O</div><div><h2 class="font-display-md text-[18px] text-on-surface leading-tight">ProcuraFlow</h2><p class="font-label-caps text-[10px] text-on-surface-variant tracking-widest uppercase">ENTERPRISE SAAS</p></div></div></div>
+<nav class="flex-1 space-y-1"><div class="mb-6"><button class="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-on-surface border border-white/5 rounded-xl py-3 px-4 font-label-caps transition-all text-[14px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"><span class="material-symbols-outlined text-[20px] text-primary">add</span> New Request</button></div><div class="space-y-1"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface bg-white/10 border-l-2 border-primary relative group" href="#"><span class="material-symbols-outlined text-[20px] text-primary">grid_view</span><span class="font-body-md text-body-sm font-semibold">Overview</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span class="font-body-md text-body-sm font-medium">Vendors</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">request_quote</span><span class="font-body-md text-body-sm font-medium">RFQs</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">description</span><span class="font-body-md text-body-sm font-medium">Quotations</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">fact_check</span><span class="font-body-md text-body-sm font-medium">Approvals</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">shopping_cart</span><span class="font-body-md text-body-sm font-medium">Orders</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-body-md text-body-sm font-medium">Invoices</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">bar_chart</span><span class="font-body-md text-body-sm font-medium">Reports</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span class="font-body-md text-body-sm font-medium">Activity</span></a></div></nav>
+<div class="mt-auto space-y-4 pt-8"><div class="border-t border-white/5 pt-4 space-y-1"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">help</span><span class="font-body-md text-body-sm font-medium">Help</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-colors group" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-sm font-medium">Settings</span></a></div></div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] p-container-padding">
+<div class="max-w-[1200px] mx-auto">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-stack-lg">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Activity &amp; Logs</h1>
+<p class="font-body-md text-body-sm text-on-surface-variant max-w-xl">Immutable audit trail of all procurement events, approvals, and system changes across the enterprise.</p>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-2 bg-[#080808] p-1 rounded-full border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface font-label-caps text-[11px] border border-white/5 shadow-[0_2px_8px_rgba(0,0,0,0.4)]">All Events</button>
+<button class="px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-white/5 font-label-caps text-[11px] transition-colors">RFQs</button>
+<button class="px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-white/5 font-label-caps text-[11px] transition-colors">Approvals</button>
+<button class="px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-white/5 font-label-caps text-[11px] transition-colors">Invoices</button>
+<button class="px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-white/5 font-label-caps text-[11px] transition-colors">Vendors</button>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-grid">
+<!-- Timeline Column -->
+<div class="lg:col-span-8 space-y-6">
+<div class="glass-panel glass-glow rounded-xl p-6 relative">
+<div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
+<h2 class="font-mono-data text-body-md text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#c4c0ff]"></span>
+                                Live Feed
+                            </h2>
+<span class="font-mono-data text-[12px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">sync</span> Auto-updating
+                            </span>
+</div>
+<div class="space-y-8 relative before:absolute before:inset-0 before:ml-[23px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-white/10 before:via-white/5 before:to-transparent z-0 pl-12 md:pl-0">
+<!-- Event Item 1: Quotation Selected -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group z-10 timeline-item">
+<!-- Icon/Marker -->
+<div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#121212] border border-secondary/30 shadow-[0_0_20px_rgba(255,181,153,0.15)] text-secondary absolute left-0 md:left-1/2 md:-translate-x-1/2 z-20 group-hover:scale-110 transition-transform duration-300 group-hover:border-secondary/60">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">contract</span>
+</div>
+<div class="timeline-line md:hidden"></div>
+<!-- Content Card -->
+<div class="w-full md:w-[calc(50%-3rem)] bg-[#0A0A0A] border border-white/5 rounded-lg p-4 hover:border-secondary/30 transition-colors duration-300 shadow-lg relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary opacity-50"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-[10px] text-secondary tracking-wider uppercase bg-secondary/10 px-2 py-0.5 rounded">Quotation Selected</span>
+<span class="font-mono-data text-[11px] text-on-surface-variant">10:42 AM</span>
+</div>
+<h3 class="font-body-md text-body-sm font-semibold text-on-surface mb-1">TechCorp IT Infrastructure</h3>
+<p class="font-body-sm text-[13px] text-on-surface-variant leading-relaxed mb-3">Quotation Q-2023-891 from 'Global Tech Supplies' selected for review. Amount: $45,200.00.</p>
+<div class="flex items-center gap-2 border-t border-white/5 pt-3">
+<img alt="User" class="w-5 h-5 rounded-full grayscale opacity-80" data-alt="A tiny, circular headshot of a professional individual against a neutral background." src="assets/AB6AXuCRd7VKe2GV6xKDVyxjRNZP6qrpEs-VjCxox9C-r8e9i8K_XtJYWCAWeMaFliFjclL8K2sm_H88QTjUZPvfBGYJknDe72-_-942d186bcba48a839c2ad829337bb8b0">
+<span class="font-mono-data text-[11px] text-on-surface-variant">Action by: M. Chen</span>
+</div>
+</div>
+</div>
+<!-- Event Item 2: Approval Pending -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group z-10 timeline-item">
+<!-- Icon/Marker -->
+<div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#121212] border border-tertiary/30 shadow-[0_0_20px_rgba(154,213,148,0.15)] text-tertiary absolute left-0 md:left-1/2 md:-translate-x-1/2 z-20 group-hover:scale-110 transition-transform duration-300 group-hover:border-tertiary/60">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
+</div>
+<div class="timeline-line md:hidden"></div>
+<!-- Content Card -->
+<div class="w-full md:w-[calc(50%-3rem)] bg-[#0A0A0A] border border-white/5 rounded-lg p-4 hover:border-tertiary/30 transition-colors duration-300 shadow-lg relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary opacity-50"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-[10px] text-tertiary tracking-wider uppercase bg-tertiary/10 px-2 py-0.5 rounded">Approval Pending</span>
+<span class="font-mono-data text-[11px] text-on-surface-variant">09:15 AM</span>
+</div>
+<h3 class="font-body-md text-body-sm font-semibold text-on-surface mb-1">Software Licensing Renewal 2024</h3>
+<p class="font-body-sm text-[13px] text-on-surface-variant leading-relaxed mb-3">PO Request #REQ-882 awaiting final sign-off from Department Head.</p>
+<div class="flex items-center gap-2 border-t border-white/5 pt-3">
+<img alt="User" class="w-5 h-5 rounded-full grayscale opacity-80" data-alt="A tiny, circular headshot of a professional individual against a neutral background." src="assets/AB6AXuC21scBtrayI6bZlwRfl9jV5WotC7EZKTPiqODMLZZQstvIICUc6qw2IEAYYQIvakkiaeWQVSFScBBK0BkYN01vNnWlDZPe-01755914d3f3545e61247bc48acb9c13">
+<span class="font-mono-data text-[11px] text-on-surface-variant">Routed to: S. Williams</span>
+</div>
+</div>
+</div>
+<!-- Event Item 3: RFQ Published -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group z-10 timeline-item">
+<!-- Icon/Marker -->
+<div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#121212] border border-primary/30 shadow-[0_0_20px_rgba(196,192,255,0.15)] text-primary absolute left-0 md:left-1/2 md:-translate-x-1/2 z-20 group-hover:scale-110 transition-transform duration-300 group-hover:border-primary/60">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">campaign</span>
+</div>
+<div class="timeline-line md:hidden"></div>
+<!-- Content Card -->
+<div class="w-full md:w-[calc(50%-3rem)] bg-[#0A0A0A] border border-white/5 rounded-lg p-4 hover:border-primary/30 transition-colors duration-300 shadow-lg relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary opacity-50"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-[10px] text-primary tracking-wider uppercase bg-primary/10 px-2 py-0.5 rounded">RFQ Published</span>
+<span class="font-mono-data text-[11px] text-on-surface-variant">Yesterday, 16:30</span>
+</div>
+<h3 class="font-body-md text-body-sm font-semibold text-on-surface mb-1">Office Furniture Expansion</h3>
+<p class="font-body-sm text-[13px] text-on-surface-variant leading-relaxed mb-3">RFQ-2023-045 broadcasted to 12 verified vendors in category 'Facilities'.</p>
+<div class="flex items-center gap-2 border-t border-white/5 pt-3">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center border border-white/10">
+<span class="material-symbols-outlined text-[12px] text-on-surface-variant">robot_2</span>
+</div>
+<span class="font-mono-data text-[11px] text-on-surface-variant">Action by: System (Auto-schedule)</span>
+</div>
+</div>
+</div>
+<!-- Event Item 4: Vendor Added -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group z-10 timeline-item">
+<!-- Icon/Marker -->
+<div class="flex items-center justify-center w-12 h-12 rounded-full bg-[#121212] border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)] text-on-surface absolute left-0 md:left-1/2 md:-translate-x-1/2 z-20 group-hover:scale-110 transition-transform duration-300 group-hover:border-white/40">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">person_add</span>
+</div>
+<div class="timeline-line md:hidden"></div>
+<!-- Content Card -->
+<div class="w-full md:w-[calc(50%-3rem)] bg-[#0A0A0A] border border-white/5 rounded-lg p-4 hover:border-white/20 transition-colors duration-300 shadow-lg relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-white/30 opacity-50"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-[10px] text-on-surface-variant tracking-wider uppercase bg-white/5 px-2 py-0.5 rounded">Vendor Onboarded</span>
+<span class="font-mono-data text-[11px] text-on-surface-variant">Yesterday, 11:20</span>
+</div>
+<h3 class="font-body-md text-body-sm font-semibold text-on-surface mb-1">Apex Logistics Inc.</h3>
+<p class="font-body-sm text-[13px] text-on-surface-variant leading-relaxed mb-3">New vendor profile created and risk assessment completed automatically. Status: Approved.</p>
+<div class="flex items-center gap-2 border-t border-white/5 pt-3">
+<img alt="User" class="w-5 h-5 rounded-full grayscale opacity-80" data-alt="A tiny, circular headshot of a professional individual against a neutral background." src="assets/AB6AXuCINCpF2HXKdd96EYEU5PdRZBho5meJYt0PItl4XiZpywgbnz76ro0ioPngMWh-JuuWEfSPRfCJ_I9ZqSdwV2mLcMA0phhV-1530e5d7451feacba4354a97faaba12e">
+<span class="font-mono-data text-[11px] text-on-surface-variant">Action by: D. Roberts</span>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<div class="flex justify-center pt-8 relative z-20">
+<button class="px-6 py-2 rounded-full border border-white/10 text-on-surface-variant font-label-caps hover:bg-white/5 hover:text-on-surface transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">expand_more</span> Load Older Events
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar / Statistics & Search Context -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Search within logs -->
+<div class="glass-panel rounded-xl p-5 border border-white/5">
+<h3 class="font-mono-data text-body-sm text-on-surface mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">filter_alt</span> Advanced Search
+                        </h3>
+<div class="space-y-3">
+<div class="relative">
+<input class="w-full bg-[#0A0A0A] border border-white/10 rounded-lg py-2.5 px-3 text-body-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 transition-colors" placeholder="Event ID or Keyword" type="text">
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[14px] text-on-surface-variant">calendar_today</span>
+<input class="w-full bg-[#0A0A0A] border border-white/10 rounded-lg py-2.5 pl-8 pr-3 text-[12px] text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 transition-colors" placeholder="From Date" type="text">
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[14px] text-on-surface-variant">calendar_today</span>
+<input class="w-full bg-[#0A0A0A] border border-white/10 rounded-lg py-2.5 pl-8 pr-3 text-[12px] text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 transition-colors" placeholder="To Date" type="text">
+</div>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[14px] text-on-surface-variant">person</span>
+<input class="w-full bg-[#0A0A0A] border border-white/10 rounded-lg py-2.5 pl-8 pr-3 text-body-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/50 transition-colors" placeholder="User or System Agent" type="text">
+</div>
+<button class="w-full py-2 bg-surface-container-high hover:bg-white/10 text-on-surface rounded-lg font-label-caps border border-white/10 transition-colors mt-2">Apply Filters</button>
+</div>
+</div>
+<!-- Summary Stats Widget -->
+<div class="glass-panel rounded-xl p-5 border border-white/5 relative overflow-hidden group">
+<div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors duration-500"></div>
+<h3 class="font-mono-data text-body-sm text-on-surface mb-4">Event Frequency (7d)</h3>
+<!-- Mini Chart Visualization -->
+<div class="h-24 w-full flex items-end justify-between gap-1 mb-4 border-b border-white/10 pb-2">
+<div class="w-full bg-primary/20 rounded-t-sm h-[30%] hover:bg-primary/40 transition-colors relative group/bar"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono-data text-on-surface-variant opacity-0 group-hover/bar:opacity-100 transition-opacity">12</span></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[45%] hover:bg-primary/40 transition-colors relative group/bar"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono-data text-on-surface-variant opacity-0 group-hover/bar:opacity-100 transition-opacity">18</span></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[25%] hover:bg-primary/40 transition-colors relative group/bar"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono-data text-on-surface-variant opacity-0 group-hover/bar:opacity-100 transition-opacity">8</span></div>
+<div class="w-full bg-primary/60 rounded-t-sm h-[80%] hover:bg-primary/80 transition-colors shadow-[0_0_10px_rgba(196,192,255,0.3)] relative group/bar"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono-data text-on-surface-variant opacity-0 group-hover/bar:opacity-100 transition-opacity">42</span></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[60%] hover:bg-primary/40 transition-colors relative group/bar"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono-data text-on-surface-variant opacity-0 group-hover/bar:opacity-100 transition-opacity">24</span></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[35%] hover:bg-primary/40 transition-colors relative group/bar"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono-data text-on-surface-variant opacity-0 group-hover/bar:opacity-100 transition-opacity">15</span></div>
+<div class="w-full bg-primary/40 rounded-t-sm h-[50%] hover:bg-primary/60 transition-colors relative group/bar"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono-data text-on-surface-variant opacity-0 group-hover/bar:opacity-100 transition-opacity">21</span></div>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<div>
+<p class="font-label-caps text-[10px] uppercase tracking-wider mb-1">Total Events</p>
+<p class="font-display-md text-[24px] text-on-surface leading-none">140</p>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-[10px] uppercase tracking-wider mb-1">Peak Day</p>
+<p class="font-mono-data text-[14px] text-primary">Wednesday</p>
+</div>
+</div>
+</div>
+<!-- System Status -->
+<div class="bg-[#0A0A0A] rounded-xl p-4 border border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_#b5f2af] animate-pulse"></div>
+<span class="font-mono-data text-[12px] text-on-surface-variant">Audit Trail Integrity</span>
+</div>
+<span class="font-label-caps text-[10px] bg-tertiary/10 text-tertiary px-2 py-1 rounded border border-tertiary/20">VERIFIED</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+
+</body></html>

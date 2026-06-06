@@ -1,0 +1,520 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Purchase Order &amp; Invoice - VendorBridge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="assets/css2-a39f5c6fcbb87b419667ec984d2e579a" rel="stylesheet">
+<link href="assets/css2-c29875d9a52a6c0c8c309c02a494a7c3" rel="stylesheet">
+<link href="assets/css2-a39f5c6fcbb87b419667ec984d2e579a" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-variant": "#35343e",
+                      "on-secondary-container": "#ffa17c",
+                      "on-primary-fixed-variant": "#3622ca",
+                      "on-surface": "#e4e1ee",
+                      "on-primary": "#2000a4",
+                      "surface-container-high": "#2a2933",
+                      "on-tertiary-container": "#003209",
+                      "error": "#ffb4ab",
+                      "surface-tint": "#c4c0ff",
+                      "primary-fixed-dim": "#c4c0ff",
+                      "on-error-container": "#ffdad6",
+                      "surface-bright": "#393842",
+                      "surface-container-highest": "#35343e",
+                      "on-secondary-fixed": "#370e00",
+                      "tertiary-fixed": "#b5f2af",
+                      "surface-dim": "#13121b",
+                      "on-secondary": "#5a1b00",
+                      "on-error": "#690005",
+                      "secondary-container": "#822d03",
+                      "surface-container-low": "#1b1b24",
+                      "inverse-surface": "#e4e1ee",
+                      "background": "#13121b",
+                      "error-container": "#93000a",
+                      "on-primary-fixed": "#100069",
+                      "surface-container": "#1f1f28",
+                      "on-tertiary-fixed": "#002204",
+                      "outline-variant": "#464555",
+                      "surface": "#13121b",
+                      "primary-container": "#8781ff",
+                      "on-surface-variant": "#c7c4d8",
+                      "on-tertiary": "#00390b",
+                      "on-secondary-fixed-variant": "#7f2b01",
+                      "inverse-on-surface": "#302f39",
+                      "secondary-fixed": "#ffdbce",
+                      "on-primary-container": "#1b0091",
+                      "secondary": "#ffb599",
+                      "outline": "#918fa1",
+                      "on-tertiary-fixed-variant": "#1b511f",
+                      "tertiary-fixed-dim": "#9ad594",
+                      "primary": "#c4c0ff",
+                      "tertiary": "#9ad594",
+                      "inverse-primary": "#4f44e2",
+                      "secondary-fixed-dim": "#ffb599",
+                      "on-background": "#e4e1ee",
+                      "tertiary-container": "#669e63",
+                      "primary-fixed": "#e3dfff",
+                      "surface-container-lowest": "#0e0d16"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter-grid": "24px",
+                      "base": "8px",
+                      "container-padding": "32px",
+                      "stack-sm": "12px",
+                      "stack-md": "24px",
+                      "stack-lg": "40px"
+              },
+              "fontFamily": {
+                      "display-md": [
+                              "Space Grotesk"
+                      ],
+                      "mono-data": [
+                              "Space Grotesk"
+                      ],
+                      "body-md": [
+                              "Sora"
+                      ],
+                      "headline-lg-mobile": [
+                              "Space Grotesk"
+                      ],
+                      "display-lg": [
+                              "Space Grotesk"
+                      ],
+                      "body-sm": [
+                              "Sora"
+                      ],
+                      "label-caps": [
+                              "Sora"
+                      ],
+                      "headline-lg": [
+                              "Space Grotesk"
+                      ],
+                      "body-lg": [
+                              "Sora"
+                      ]
+              },
+              "fontSize": {
+                      "display-md": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "mono-data": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.08em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #0A0A0A;
+            color: #e4e1ee;
+        }
+        
+        .glass-card {
+            background: rgba(18, 18, 18, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .inner-glow {
+            box-shadow: inset 1px 1px 0px 0px rgba(255,255,255,0.05);
+        }
+
+        .neon-glow-primary {
+            box-shadow: 0 0 20px 0 rgba(196, 192, 255, 0.15);
+        }
+
+        .nav-indicator {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background-color: #c4c0ff;
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 10px #c4c0ff;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .active-nav .nav-indicator {
+            opacity: 1;
+        }
+
+        /* Custom Scrollbar for High-End feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #13121b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #35343e;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #464555;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 z-[-1] pointer-events-none">
+<div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-[120px]"></div>
+<div class="absolute bottom-[-20%] right-[-10%] w-[40%] h-[40%] rounded-full bg-tertiary/5 blur-[100px]"></div>
+</div>
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-surface font-display-md text-label-caps fixed left-0 top-0 h-full w-[280px] border-r border-white/10 flat no shadows flex flex-col py-8 px-4 z-50 hidden md:flex"><!-- Logo -->
+<div class="mb-stack-lg px-4 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl overflow-hidden">
+        https://lh3.googleusercontent.com/aida-public/AB6AXuBV2WnkheqO5nFUHGY1j2vJpFTRJ3AWRBmIUmah6k4Wmia3S9yv4CVeKQ6TsKzGfRFh_mYdIXeiylQSzxGxEYOHUTue4FH9p1iwdIKbUMt8AtHWqcV41-yAWXvakjmUctyEJrgFUaB69VsfYm3bXKN02lYe2rWAr4k1jxmu1k_Vstox5fBfCzf-qqJbeOZPD3rHq_E4d8cYIqEKcCZkpH0lkf7rMrimEF4Fu5tlUoUZ87xoKCIy9jH7a7Sqqjm8f5iqT8YCIQ80rY_O
+    </div>
+    <div>
+        <div class="font-display-md text-display-md font-bold text-on-secondary-container text-xl tracking-tight">ProcuraFlow</div>
+        <div class="font-body-sm text-label-caps text-on-surface-variant/60 mt-1">ENTERPRISE SAAS</div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="px-4 mb-stack-md">
+    <button class="w-full bg-surface-container-high/30 text-on-surface font-label-caps font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors duration-200 border border-white/5">
+        <span class="material-symbols-outlined text-[18px]">add</span>
+        New Request
+    </button>
+</div>
+
+<!-- Main Nav -->
+<div class="flex-1 overflow-y-auto pr-2 space-y-1"><a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-primary bg-surface-container-high border-l-4 border-primary active-nav group" href="#">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+        <span class="font-bold">Overview</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">group</span>
+        <span class="">Vendors</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">description</span>
+        <span class="">RFQs</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">article</span>
+        <span class="">Quotations</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">fact_check</span>
+        <span class="">Approvals</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">shopping_cart</span>
+        <span class="">Orders</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">receipt_long</span>
+        <span class="">Invoices</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">bar_chart</span>
+        <span class="">Reports</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">history</span>
+        <span class="">Activity</span>
+    </a></div>
+
+<!-- Footer Nav -->
+<div class="mt-auto pt-4 border-t border-white/5 space-y-1">
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">help</span>
+        <span class="">Help</span>
+    </a>
+    <a class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+        <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+        <span class="">Settings</span>
+    </a>
+</div></nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-[280px] w-full min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-xl dark:bg-surface/80 font-body-md text-body-md sticky top-0 z-40 w-full border-b border-white/10 flat no shadows flex justify-between items-center px-gutter-grid h-20">
+<!-- Left: Search (On Left) -->
+<div class="flex-1 flex items-center">
+<div class="relative w-full max-w-md hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-full py-2 pl-10 pr-4 text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-sm" placeholder="Search invoices, vendors, POs..." type="text">
+</div>
+<!-- Mobile Logo (Visible only on md:hidden) -->
+<div class="font-display-md text-headline-lg-mobile font-bold text-on-secondary-container md:hidden flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container/10 border border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">hexagon</span>
+</div>
+                    VendorBridge
+                </div>
+</div>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors opacity-80 hover:opacity-100 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full shadow-[0_0_8px_rgba(255,180,171,0.8)]"></span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-6 w-px bg-white/10 mx-2"></div>
+<button class="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-surface-container-high transition-colors">
+<div class="text-right hidden sm:block">
+<div class="font-body-sm text-body-sm font-medium text-on-surface">Alex Mercer</div>
+<div class="font-body-sm text-label-caps text-on-surface-variant">Procurement Head</div>
+</div>
+<img alt="User Profile Avatar" class="w-9 h-9 rounded-full border border-white/10 object-cover" data-alt="A professional headshot of a corporate procurement executive, styled with moody, high-contrast studio lighting fitting a premium fintech application. The background is a dark, neutral grey." src="assets/AB6AXuBWLO8pz7dNXU__XhMuRmyUOgkqprKBHny7UvObA34ScMX2iC4maL8RhS1MRaXcdLaa5GUmeRuZuvHhsVCGDc6q1SwXLg9c-ec01d5eaef0d46be03e3d81f6906f673">
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-4 md:p-container-padding overflow-y-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-stack-md">
+<div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-label-caps mb-2">
+<a class="hover:text-primary transition-colors" href="#">Invoices</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary">INV-2023-0892</span>
+</div>
+<h1 class="font-display-lg text-headline-lg md:text-display-lg text-on-surface">Invoice Details</h1>
+</div>
+<div class="flex items-center gap-3 flex-wrap">
+<button class="px-4 py-2 rounded-xl bg-transparent border border-white/10 text-on-surface hover:bg-surface-container-high font-label-caps transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Download PDF
+                    </button>
+<button class="px-4 py-2 rounded-xl bg-transparent border border-white/10 text-on-surface hover:bg-surface-container-high font-label-caps transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">print</span>
+                        Print
+                    </button>
+<button class="px-4 py-2 rounded-xl bg-transparent border border-white/10 text-on-surface hover:bg-surface-container-high font-label-caps transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+                        Email
+                    </button>
+<button class="px-5 py-2 rounded-xl bg-primary text-on-primary font-label-caps hover:bg-primary-fixed transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(196,192,255,0.2)]">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                        Mark as Paid
+                    </button>
+</div>
+</div>
+<!-- Document Container (The Glass Card) -->
+<div class="glass-card rounded-[24px] p-6 md:p-10 inner-glow relative overflow-hidden">
+<!-- Decorative Top Border Glow -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+<!-- Status Badge -->
+<div class="absolute top-6 right-6 md:top-10 md:right-10 flex items-center gap-2 bg-secondary-container/20 border border-secondary-container/30 px-3 py-1.5 rounded-full">
+<div class="w-2 h-2 rounded-full bg-[#ffa17c] shadow-[0_0_8px_#ffa17c]"></div>
+<span class="font-label-caps text-[#ffa17c]">Pending Payment</span>
+</div>
+<!-- Header Info -->
+<div class="flex flex-col md:flex-row justify-between gap-8 mb-12 border-b border-white/5 pb-8">
+<!-- Vendor Info -->
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center border border-white/10 shrink-0">
+<span class="material-symbols-outlined text-3xl text-primary opacity-80">precision_manufacturing</span>
+</div>
+<div>
+<h2 class="font-display-md text-headline-lg-mobile text-on-surface mb-1">Nexus Tech Solutions</h2>
+<p class="font-mono-data text-body-sm text-on-surface-variant">Vendor ID: V-8834</p>
+<div class="mt-3 font-body-sm text-body-sm text-on-surface-variant/80">
+                                445 Innovation Blvd, Suite 200<br>
+                                San Jose, CA 95110<br>
+                                accounts@nexustech.io
+                            </div>
+</div>
+</div>
+<!-- Invoice Details -->
+<div class="grid grid-cols-2 gap-x-8 gap-y-4 md:text-right">
+<div>
+<div class="font-label-caps text-on-surface-variant mb-1">Invoice Number</div>
+<div class="font-mono-data text-body-md text-on-surface">INV-2023-0892</div>
+</div>
+<div>
+<div class="font-label-caps text-on-surface-variant mb-1">PO Number</div>
+<div class="font-mono-data text-body-md text-on-surface hover:text-primary cursor-pointer transition-colors">PO-44-091A</div>
+</div>
+<div>
+<div class="font-label-caps text-on-surface-variant mb-1">Issue Date</div>
+<div class="font-mono-data text-body-md text-on-surface">Oct 24, 2023</div>
+</div>
+<div>
+<div class="font-label-caps text-on-surface-variant mb-1">Due Date</div>
+<div class="font-mono-data text-body-md text-[#ffa17c] font-medium">Nov 23, 2023</div>
+</div>
+</div>
+</div>
+<!-- Bill To -->
+<div class="mb-10">
+<div class="font-label-caps text-on-surface-variant mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">domain</span>
+                        Bill To
+                    </div>
+<h3 class="font-display-md text-body-lg font-medium text-on-surface">VendorBridge Corporate HQ</h3>
+<div class="font-body-sm text-body-sm text-on-surface-variant/80 mt-1">
+                        100 Enterprise Way, Floor 14<br>
+                        New York, NY 10001<br>
+                        United States
+                    </div>
+</div>
+<!-- Line Items Table -->
+<div class="bg-surface-container-low/50 rounded-xl border border-white/5 overflow-x-auto mb-10">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-white/5 bg-surface-container-high/30">
+<th class="py-4 px-6 font-label-caps text-on-surface-variant font-medium">Item Description</th>
+<th class="py-4 px-6 font-label-caps text-on-surface-variant font-medium text-right">Qty</th>
+<th class="py-4 px-6 font-label-caps text-on-surface-variant font-medium text-right">Rate</th>
+<th class="py-4 px-6 font-label-caps text-on-surface-variant font-medium text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="font-mono-data text-body-sm">
+<tr class="border-b border-white/5 hover:bg-surface-container-high/20 transition-colors">
+<td class="py-4 px-6 text-on-surface">
+<div class="font-medium mb-1">Enterprise Server Racks (42U)</div>
+<div class="text-[12px] text-on-surface-variant/60 font-body-sm">SKU: SR-42U-BLK-01</div>
+</td>
+<td class="py-4 px-6 text-right text-on-surface-variant">12</td>
+<td class="py-4 px-6 text-right text-on-surface-variant">$1,250.00</td>
+<td class="py-4 px-6 text-right text-on-surface">$15,000.00</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-surface-container-high/20 transition-colors">
+<td class="py-4 px-6 text-on-surface">
+<div class="font-medium mb-1">Cisco Catalyst 9300 Switches</div>
+<div class="text-[12px] text-on-surface-variant/60 font-body-sm">SKU: CS-9300-48P-E</div>
+</td>
+<td class="py-4 px-6 text-right text-on-surface-variant">4</td>
+<td class="py-4 px-6 text-right text-on-surface-variant">$4,800.00</td>
+<td class="py-4 px-6 text-right text-on-surface">$19,200.00</td>
+</tr>
+<tr class="hover:bg-surface-container-high/20 transition-colors">
+<td class="py-4 px-6 text-on-surface">
+<div class="font-medium mb-1">On-site Installation &amp; Configuration</div>
+<div class="text-[12px] text-on-surface-variant/60 font-body-sm">Service ID: SVC-INSTALL-L2</div>
+</td>
+<td class="py-4 px-6 text-right text-on-surface-variant">40 <span class="text-[10px]">hrs</span></td>
+<td class="py-4 px-6 text-right text-on-surface-variant">$150.00</td>
+<td class="py-4 px-6 text-right text-on-surface">$6,000.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Totals Section -->
+<div class="flex flex-col md:flex-row justify-end border-t border-white/5 pt-8">
+<div class="w-full md:w-[350px]">
+<div class="space-y-3 font-mono-data text-body-sm">
+<div class="flex justify-between text-on-surface-variant">
+<span class="">Subtotal</span>
+<span class="">$40,200.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span class="">CGST (9%)</span>
+<span class="">$3,618.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span class="">SGST (9%)</span>
+<span class="">$3,618.00</span>
+</div>
+<div class="h-px bg-white/10 my-4"></div>
+<div class="flex justify-between items-center bg-primary/10 p-4 rounded-xl border border-primary/20">
+<span class="font-label-caps text-primary">Grand Total</span>
+<span class="font-display-md text-headline-lg-mobile text-primary font-bold tracking-tight">$47,436.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Notes -->
+<div class="mt-12 pt-8 border-t border-white/5 text-center md:text-left">
+<div class="font-label-caps text-on-surface-variant mb-2">Payment Instructions</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant/70 max-w-2xl">
+                        Please remit payment to Nexus Tech Solutions via ACH or Wire Transfer within 30 days of invoice date. Bank details are attached to the PDF version of this document. Late payments are subject to a 1.5% monthly penalty fee.
+                    </p>
+</div>
+</div>
+<!-- Bottom spacing -->
+<div class="h-12"></div>
+</main>
+</div>
+
+
+
+
+</body></html>

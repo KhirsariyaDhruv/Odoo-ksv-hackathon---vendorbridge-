@@ -1,0 +1,299 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VendorBridge - Referral</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="assets/css2-c29875d9a52a6c0c8c309c02a494a7c3" rel="stylesheet">
+<link href="assets/css2-a39f5c6fcbb87b419667ec984d2e579a" rel="stylesheet">
+<link href="assets/css2-a39f5c6fcbb87b419667ec984d2e579a" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#13121b",
+                        "surface-dim": "#13121b",
+                        "primary-container": "#8781ff",
+                        "error-container": "#93000a",
+                        "secondary": "#ffb599",
+                        "on-error-container": "#ffdad6",
+                        "surface-tint": "#c4c0ff",
+                        "surface-container-highest": "#35343e",
+                        "on-primary-fixed-variant": "#3622ca",
+                        "on-secondary": "#5a1b00",
+                        "surface-container-lowest": "#0e0d16",
+                        "on-tertiary-fixed-variant": "#1b511f",
+                        "inverse-surface": "#e4e1ee",
+                        "tertiary-container": "#669e63",
+                        "primary-fixed": "#e3dfff",
+                        "primary": "#c4c0ff",
+                        "surface-container-low": "#1b1b24",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-variant": "#35343e",
+                        "surface-bright": "#393842",
+                        "inverse-primary": "#4f44e2",
+                        "surface-container-high": "#2a2933",
+                        "on-secondary-fixed-variant": "#7f2b01",
+                        "tertiary-fixed": "#b5f2af",
+                        "on-tertiary-fixed": "#002204",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#ffa17c",
+                        "tertiary-fixed-dim": "#9ad594",
+                        "primary-fixed-dim": "#c4c0ff",
+                        "on-tertiary-container": "#003209",
+                        "on-primary": "#2000a4",
+                        "on-surface": "#e4e1ee",
+                        "outline": "#918fa1",
+                        "secondary-fixed-dim": "#ffb599",
+                        "background": "#13121b",
+                        "on-primary-fixed": "#100069",
+                        "outline-variant": "#464555",
+                        "on-tertiary": "#00390b",
+                        "inverse-on-surface": "#302f39",
+                        "tertiary": "#9ad594",
+                        "on-secondary-fixed": "#370e00",
+                        "on-primary-container": "#1b0091",
+                        "secondary-container": "#822d03",
+                        "on-background": "#e4e1ee",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#c7c4d8",
+                        "surface-container": "#1f1f28"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-grid": "24px",
+                        "container-padding": "32px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px",
+                        "stack-lg": "40px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Space Grotesk"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-sm": ["Sora"],
+                        "body-md": ["Sora"],
+                        "label-caps": ["Sora"],
+                        "display-md": ["Space Grotesk"],
+                        "body-lg": ["Sora"],
+                        "display-lg": ["Space Grotesk"],
+                        "mono-data": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+                        "display-md": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "mono-data": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-level-1 {
+            background-color: #121212;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-accent {
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.15);
+        }
+        .inner-glow {
+            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.1);
+        }
+        .chart-gradient {
+            background: linear-gradient(180deg, rgba(108, 99, 255, 0.2) 0%, rgba(108, 99, 255, 0) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex overflow-x-hidden">
+<!-- SideNavBar -->
+<nav class="bg-surface-dim dark:bg-surface-dim text-primary dark:text-primary-fixed-dim w-[280px] h-screen fixed left-0 top-0 flex flex-col border-r border-outline-variant/10 z-50" style="background-color: rgb(14, 13, 22);">
+<div class="flex flex-col justify-between py-stack-md h-full"><div class="flex flex-col gap-6">
+<div class="px-6 flex items-center gap-3"><div class="flex items-center gap-3"><img src="assets/AB6AXuBV2WnkheqO5nFUHGY1j2vJpFTRJ3AWRBmIUmah6k4Wmia3S9yv4CVeKQ6TsKzGfRFh_mYdIXeiylQSzxGxEYOHUTue4FH9-b9628e7166790639bd07188b1a25d1dd" alt="ProcuraFlow Logo" class="w-10 h-10 rounded-lg"><div class="flex flex-col"><span class="text-on-surface font-display-md text-lg leading-tight">ProcuraFlow</span><span class="text-outline text-[10px] tracking-widest font-label-caps">ENTERPRISE SAAS</span></div></div></div>
+<div class="px-4">
+<button class="w-full bg-surface-container-low hover:bg-surface-container-high text-on-surface py-3 rounded-xl flex items-center justify-center gap-2 border border-outline-variant/20 transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="text-label-caps">New Request</span>
+</button>
+</div>
+<ul class="flex flex-col"><li class=""><a class="flex items-center gap-4 py-3 px-6 mx-3 rounded-lg bg-surface-container-high text-on-surface border-l-2 border-primary" href="#"><span class="material-symbols-outlined text-xl">grid_view</span><span class="text-body-sm font-bold">Overview</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">group</span><span class="text-body-sm font-bold">Vendors</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">description</span><span class="text-body-sm font-bold">RFQs</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">article</span><span class="text-body-sm font-bold">Quotations</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">fact_check</span><span class="text-body-sm font-bold">Approvals</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">shopping_cart</span><span class="text-body-sm font-bold">Orders</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">receipt</span><span class="text-body-sm font-bold">Invoices</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">bar_chart</span><span class="text-body-sm font-bold">Reports</span></a></li><li class=""><a class="flex items-center gap-4 py-3 px-6 text-on-surface-variant hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-xl">history</span><span class="text-body-sm font-bold">Activity</span></a></li></ul>
+</div>
+<div class="px-6 flex flex-col gap-2 border-t border-outline-variant/10 pt-4">
+<a class="flex items-center gap-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-body-sm">Help</span>
+</a>
+<a class="flex items-center gap-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-body-sm">Settings</span>
+</a>
+</div></div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-[280px] w-[calc(100%-280px)] min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-xl dark:bg-surface-dim/80 sticky top-0 right-0 z-40 bg-transparent flex items-center justify-between px-container-padding py-base border-b border-outline-variant/10"><div class="w-32 h-auto mr-4"><div class="flex items-center gap-2"><img src="assets/AB6AXuBV2WnkheqO5nFUHGY1j2vJpFTRJ3AWRBmIUmah6k4Wmia3S9yv4CVeKQ6TsKzGfRFh_mYdIXeiylQSzxGxEYOHUTue4FH9-b9628e7166790639bd07188b1a25d1dd" alt="ProcuraFlow" class="h-8 w-auto"><span class="text-on-surface font-display-md text-lg">ProcuraFlow</span></div></div>
+<div class="flex items-center gap-4 bg-surface-container-low rounded-full px-4 py-2 border border-outline-variant/20 focus-within:ring-2 focus-within:ring-primary-container focus-within:ring-offset-2 focus-within:ring-offset-surface w-96">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm font-body-sm text-on-surface placeholder:text-outline w-full outline-none" placeholder="Search rewards, invites..." type="text">
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/20">
+<div class="text-right hidden md:block">
+<p class="text-label-caps font-label-caps text-on-surface">Good Evening, Alex</p>
+<p class="text-body-sm font-body-sm text-tertiary">Pro Tier</p>
+</div>
+<img alt="User profile photo" class="w-10 h-10 rounded-full border-2 border-primary-container" src="assets/AB6AXuAEG7VhJgEPZC7bwMIR3ODvoFWiojuZOxgxnIqI6rTxVfeKG-dJ5aVxqVj6wl6yMVF3zW-ZfrfdipV9SvGyeiyzboGDulVf-b6126c32895b326dd3bd544bac0ff567">
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-container-padding grid grid-cols-12 gap-gutter-grid flex-1 items-start content-start">
+<!-- Hero / Total Rewards -->
+<div class="col-span-12 lg:col-span-8 bg-level-1 rounded-3xl p-stack-lg inner-glow flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-container/20 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+<div class="z-10 w-full">
+<p class="text-label-caps font-label-caps text-outline mb-4">TOTAL REWARDS EARNED</p>
+<div class="flex items-end gap-4 mb-8">
+<h2 class="text-display-lg font-display-lg text-on-surface">$12,450<span class="text-headline-lg text-outline">.00</span></h2>
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full text-mono-data font-mono-data flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-sm">arrow_upward</span> 18.2%
+                        </span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-2 flex items-center border border-outline-variant/30">
+<span class="material-symbols-outlined text-outline mx-3">link</span>
+<input class="bg-transparent border-none text-body-md font-body-md text-on-surface w-full focus:ring-0 outline-none truncate" readonly="" type="text" value="https://vendorbridge.com/ref/alex2024">
+<button class="bg-[#6C63FF] hover:bg-[#5a52d9] text-white px-6 py-2 rounded-lg text-label-caps font-label-caps transition-colors shadow-lg glow-accent shrink-0">
+                            Copy Link
+                        </button>
+</div>
+</div>
+</div>
+<!-- Conversion KPI -->
+<div class="col-span-12 lg:col-span-4 bg-tertiary-container/10 rounded-3xl p-stack-md border border-tertiary-container/30 flex flex-col justify-between relative overflow-hidden h-full">
+<div class="absolute -right-8 -bottom-8 w-40 h-40 bg-tertiary/20 rounded-full blur-[40px]"></div>
+<div class="flex justify-between items-start z-10 mb-6">
+<div class="bg-tertiary-container/20 p-3 rounded-xl">
+<span class="material-symbols-outlined text-tertiary text-3xl">query_stats</span>
+</div>
+<span class="text-label-caps font-label-caps text-outline">CONVERSION RATE</span>
+</div>
+<div class="z-10">
+<p class="text-display-md font-display-md text-tertiary">24.8%</p>
+<p class="text-body-sm font-body-sm text-outline mt-2">Avg. time to convert: 3 days</p>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-level-1 rounded-2xl p-stack-md inner-glow">
+<div class="flex justify-between items-center mb-4">
+<span class="text-label-caps font-label-caps text-outline">SUCCESSFUL REFERRALS</span>
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+</div>
+<p class="text-headline-lg font-headline-lg text-on-surface">142</p>
+<div class="w-full bg-surface-container-highest h-2 rounded-full mt-4">
+<div class="bg-secondary h-2 rounded-full" style="width: 75%"></div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-level-1 rounded-2xl p-stack-md inner-glow">
+<div class="flex justify-between items-center mb-4">
+<span class="text-label-caps font-label-caps text-outline">PENDING INVITES</span>
+<span class="material-symbols-outlined text-primary-container">pending</span>
+</div>
+<p class="text-headline-lg font-headline-lg text-on-surface">38</p>
+<div class="w-full bg-surface-container-highest h-2 rounded-full mt-4">
+<div class="bg-primary-container h-2 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+<!-- Quick Invite -->
+<div class="col-span-12 lg:col-span-4 bg-level-1 rounded-2xl p-stack-md inner-glow flex flex-col justify-center">
+<p class="text-label-caps font-label-caps text-outline mb-4">INVITE DIRECTLY</p>
+<div class="flex gap-2">
+<input class="bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-2 text-body-sm text-on-surface w-full focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="friend@company.com" type="email">
+<button class="bg-transparent border border-[#6C63FF] text-[#6C63FF] hover:bg-[#6C63FF]/10 px-4 py-2 rounded-lg text-label-caps font-label-caps transition-colors">
+                        Send
+                    </button>
+</div>
+</div>
+<!-- Referral History Table -->
+<div class="col-span-12 bg-level-1 rounded-3xl p-stack-lg inner-glow">
+<div class="flex justify-between items-center mb-6 border-b border-outline-variant/20 pb-4">
+<h3 class="text-headline-lg font-headline-lg-mobile text-on-surface">Recent History</h3>
+<button class="text-primary hover:text-primary-container text-label-caps font-label-caps flex items-center gap-1 transition-colors">
+                        View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-label-caps font-label-caps text-outline border-b border-outline-variant/10">
+<th class="py-4 font-normal">NAME</th>
+<th class="py-4 font-normal">DATE</th>
+<th class="py-4 font-normal">STATUS</th>
+<th class="py-4 font-normal text-right">REWARD</th>
+</tr>
+</thead>
+<tbody class="text-body-sm font-body-sm text-on-surface divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container font-bold text-xs">SM</div>
+                                    Sarah Miller
+                                </td>
+<td class="py-4 text-outline">Oct 24, 2023</td>
+<td class="py-4">
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full text-xs">Completed</span>
+</td>
+<td class="py-4 text-right font-mono-data text-tertiary">+$150.00</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold text-xs">JD</div>
+                                    James Davis
+                                </td>
+<td class="py-4 text-outline">Oct 22, 2023</td>
+<td class="py-4">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-xs border border-outline-variant/30">Pending</span>
+</td>
+<td class="py-4 text-right font-mono-data text-outline">-</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container font-bold text-xs">EK</div>
+                                    Elena Kovac
+                                </td>
+<td class="py-4 text-outline">Oct 18, 2023</td>
+<td class="py-4">
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full text-xs">Completed</span>
+</td>
+<td class="py-4 text-right font-mono-data text-tertiary">+$150.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+
+
+
+
+</body></html>
