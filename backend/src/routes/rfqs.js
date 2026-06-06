@@ -26,15 +26,38 @@ router.get('/', async (req, res) => {
 // Create an RFQ
 router.post('/', async (req, res) => {
   try {
-    const { title, category, deadline, description } = req.body;
+    const { title, category, deadline, description, items, vendorIds } = req.body;
     
+    const createData = {
+      title,
+      category,
+      deadline: new Date(deadline),
+      description,
+      createdBy: req.user.userId
+    };
+
+    if (items && items.length > 0) {
+      createData.items = {
+        create: items.map(item => ({
+          name: item.name,
+          quantity: parseInt(item.quantity) || 1,
+          uom: item.uom,
+          details: item.details
+        }))
+      };
+    }
+
+    if (vendorIds && vendorIds.length > 0) {
+      createData.vendors = {
+        connect: vendorIds.map(id => ({ id: parseInt(id) }))
+      };
+    }
+
     const rfq = await prisma.rFQ.create({
-      data: {
-        title,
-        category,
-        deadline: new Date(deadline),
-        description,
-        createdBy: req.user.userId
+      data: createData,
+      include: {
+        items: true,
+        vendors: { select: { id: true, name: true } }
       }
     });
     

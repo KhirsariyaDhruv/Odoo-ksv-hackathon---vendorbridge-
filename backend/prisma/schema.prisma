@@ -38,6 +38,7 @@ model Vendor {
   updatedAt         DateTime @updatedAt
   quotations        Quotation[]
   purchaseOrders    PurchaseOrder[]
+  rfqs              RFQ[]
 }
 
 model RFQ {
@@ -53,6 +54,19 @@ model RFQ {
 
   user              User     @relation(fields: [createdBy], references: [id])
   quotations        Quotation[]
+  vendors           Vendor[]
+  items             RFQItem[]
+}
+
+model RFQItem {
+  id                Int      @id @default(autoincrement())
+  rfqId             Int
+  name              String
+  quantity          Int
+  uom               String?
+  details           String?
+  
+  rfq               RFQ      @relation(fields: [rfqId], references: [id], onDelete: Cascade)
 }
 
 model Quotation {
