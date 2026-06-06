@@ -109,16 +109,31 @@ export function Activity() {
               ) : (
                 events.map((event, index) => {
                   const alignClass = index % 2 === 0 ? "md:odd:flex-row-reverse" : "md:even:flex-row-reverse";
+                  
+                  // Helper to resolve static Tailwind classes
+                  const getColorClasses = (color) => {
+                    switch (color) {
+                      case 'primary': return { border: 'border-primary/30 group-hover:border-primary/60 hover:border-primary/30', text: 'text-primary', bg: 'bg-primary', badge: 'bg-primary/10' };
+                      case 'secondary': return { border: 'border-secondary/30 group-hover:border-secondary/60 hover:border-secondary/30', text: 'text-secondary', bg: 'bg-secondary', badge: 'bg-secondary/10' };
+                      case 'tertiary': return { border: 'border-tertiary/30 group-hover:border-tertiary/60 hover:border-tertiary/30', text: 'text-tertiary', bg: 'bg-tertiary', badge: 'bg-tertiary/10' };
+                      default: return { border: 'border-surface-variant/30 group-hover:border-surface-variant/60 hover:border-surface-variant/30', text: 'text-surface-variant', bg: 'bg-surface-variant', badge: 'bg-surface-variant/10' };
+                    }
+                  };
+                  const colorClasses = getColorClasses(event.color);
+
                   return (
                     <div key={event.id} className={`relative flex items-center justify-between md:justify-normal ${alignClass} group z-10 timeline-item`}>
-                      <div className={`flex items-center justify-center w-12 h-12 rounded-full bg-surface-container-lowest border border-${event.color}/30 shadow-[0_0_20px_rgba(var(--${event.color}-rgb),0.15)] text-${event.color} absolute left-0 md:left-1/2 md:-translate-x-1/2 z-20 group-hover:scale-110 transition-transform duration-300 group-hover:border-${event.color}/60`}>
+                      <div 
+                        className={`flex items-center justify-center w-12 h-12 rounded-full bg-surface-container-lowest border ${colorClasses.border} ${colorClasses.text} absolute left-0 md:left-1/2 md:-translate-x-1/2 z-20 group-hover:scale-110 transition-transform duration-300`}
+                        style={{ boxShadow: `0 0 20px rgba(var(--${event.color}-rgb), 0.15)` }}
+                      >
                         <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: '"FILL" 1' }}>{event.icon}</span>
                       </div>
                       <div className="absolute left-[23px] top-[48px] bottom-[-24px] w-[2px] bg-gradient-to-b from-white/10 to-white/0 z-0 md:hidden"></div>
-                      <div className={`w-full md:w-[calc(50%-3rem)] bg-surface-container-lowest border border-white/5 rounded-lg p-4 hover:border-${event.color}/30 transition-colors duration-300 shadow-lg relative overflow-hidden`}>
-                        <div className={`absolute top-0 left-0 w-1 h-full bg-${event.color} opacity-50`}></div>
+                      <div className={`w-full md:w-[calc(50%-3rem)] bg-surface-container-lowest border border-white/5 rounded-lg p-4 transition-colors duration-300 shadow-lg relative overflow-hidden ${colorClasses.border}`}>
+                        <div className={`absolute top-0 left-0 w-1 h-full ${colorClasses.bg} opacity-50`}></div>
                         <div className="flex justify-between items-start mb-2">
-                          <span className={`font-label-caps text-[10px] text-${event.color} tracking-wider uppercase bg-${event.color}/10 px-2 py-0.5 rounded`}>{event.type}</span>
+                          <span className={`font-label-caps text-[10px] ${colorClasses.text} tracking-wider uppercase ${colorClasses.badge} px-2 py-0.5 rounded`}>{event.type}</span>
                           <span className="font-mono-data text-[11px] text-on-surface-variant">{event.date.toLocaleString()}</span>
                         </div>
                         <h3 className="font-body-md text-body-sm font-semibold text-on-surface mb-1">{event.title}</h3>
