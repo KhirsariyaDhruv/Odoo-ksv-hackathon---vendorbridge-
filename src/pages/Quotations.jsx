@@ -44,6 +44,26 @@ export function Quotations() {
           <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl">Comparing bids for recent RFQs. {quotations.length} vendors have submitted quotations.</p>
         </div>
         <div className="flex gap-3">
+          <button 
+            onClick={async () => {
+              try {
+                const rfqs = await api.get('/rfqs');
+                const vendors = await api.get('/vendors');
+                if (rfqs.data.length && vendors.data.length) {
+                  const rfqId = rfqs.data[0].id;
+                  const vendorId = vendors.data[0].id;
+                  await api.post('/quotations', { rfqId, vendorId, amount: Math.floor(Math.random() * 50000) + 5000 });
+                  window.location.reload();
+                } else {
+                  alert('Please create at least 1 RFQ and 1 Vendor first.');
+                }
+              } catch(e) { console.error(e); }
+            }}
+            className="bg-secondary-container text-on-secondary-container border border-secondary-container rounded-full py-2 px-6 flex items-center gap-2 text-sm font-display-md font-semibold hover:bg-secondary-fixed transition-colors"
+          >
+            <span className="material-symbols-outlined text-sm">magic_button</span>
+            Simulate Bid
+          </button>
           <button className="bg-transparent text-white border border-primary rounded-full py-2 px-6 flex items-center gap-2 text-sm font-display-md font-semibold hover:bg-primary/10 transition-colors">
             <span className="material-symbols-outlined text-sm">download</span>
             Export PDF
