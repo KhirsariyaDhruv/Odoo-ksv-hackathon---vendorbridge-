@@ -1,8 +1,10 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../prisma.js';
+import { authenticateToken } from '../middlewares/auth.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
+router.use(authenticateToken);
 
 // Get all purchase orders
 router.get('/', async (req, res) => {
