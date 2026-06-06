@@ -6,7 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -37,6 +38,7 @@ model Vendor {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   quotations        Quotation[]
+  purchaseOrders    PurchaseOrder[]
 }
 
 model RFQ {
@@ -64,4 +66,19 @@ model Quotation {
 
   rfq               RFQ      @relation(fields: [rfqId], references: [id])
   vendor            Vendor   @relation(fields: [vendorId], references: [id])
+  purchaseOrders    PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id                Int      @id @default(autoincrement())
+  poNumber          String   @unique
+  quotationId       Int?
+  vendorId          Int
+  amount            Float
+  status            String   @default("Pending Approval") // "Pending Approval", "Approved", "Rejected", "Paid"
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  quotation         Quotation? @relation(fields: [quotationId], references: [id])
+  vendor            Vendor     @relation(fields: [vendorId], references: [id])
 }

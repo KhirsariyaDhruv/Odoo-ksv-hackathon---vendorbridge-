@@ -1,4 +1,31 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../api';
+
 export function RFQs() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ title: '', category: '', deadline: '', description: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError('');
+    try {
+      await api.post('/rfqs', formData);
+      setSuccess(true);
+      setTimeout(() => navigate('/dashboard'), 2000);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create RFQ');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex-1 p-container-padding flex justify-center pb-32 md:pb-container-padding animate-fade-in z-10 relative">
       <div className="w-full max-w-4xl max-w-[800px]">
@@ -41,16 +68,19 @@ export function RFQs() {
         <div className="bg-surface/50 backdrop-blur-xl border border-white/10 shadow-inner rounded-xl p-stack-md relative overflow-hidden">
           {/* Subtle top-left glow */}
           <div className="absolute -top-20 -left-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-          <form className="space-y-stack-md relative z-10">
+          {error && <div className="mb-4 bg-error-container text-on-error-container p-3 rounded text-sm relative z-10">{error}</div>}
+          {success && <div className="mb-4 bg-tertiary-container text-on-tertiary-container p-3 rounded text-sm relative z-10">RFQ created successfully! Redirecting...</div>}
+          
+          <form onSubmit={handleSubmit} className="space-y-stack-md relative z-10">
             <div className="space-y-stack-sm">
               <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="rfq-title">RFQ Title</label>
-              <input className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/30 transition-all duration-200" id="rfq-title" placeholder="e.g., Q3 Office Furniture Refresh" type="text" />
+              <input required name="title" value={formData.title} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/30 transition-all duration-200" id="rfq-title" placeholder="e.g., Q3 Office Furniture Refresh" type="text" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
               <div className="space-y-stack-sm">
                 <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="category">Category</label>
                 <div className="relative">
-                  <select className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 pl-4 pr-10 text-body-md font-body-md text-on-surface appearance-none cursor-pointer transition-all duration-200" id="category" defaultValue="furniture">
+                  <select required name="category" value={formData.category} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 pl-4 pr-10 text-body-md font-body-md text-on-surface appearance-none cursor-pointer transition-all duration-200" id="category">
                     <option disabled value="">Select category...</option>
                     <option value="furniture">Furniture & Fixtures</option>
                     <option value="it">IT Equipment</option>
@@ -63,21 +93,21 @@ export function RFQs() {
               <div className="space-y-stack-sm">
                 <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="deadline">Submission Deadline</label>
                 <div className="relative">
-                  <input className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface transition-all duration-200 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 cursor-pointer" id="deadline" type="date" />
+                  <input required name="deadline" value={formData.deadline} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface transition-all duration-200 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 cursor-pointer" id="deadline" type="date" />
                 </div>
               </div>
             </div>
             <div className="space-y-stack-sm">
               <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="description">Description & Requirements</label>
-              <textarea className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/30 resize-none transition-all duration-200" id="description" placeholder="Provide detailed requirements, specifications, or context for this request..." rows={4}></textarea>
+              <textarea required name="description" value={formData.description} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/30 resize-none transition-all duration-200" id="description" placeholder="Provide detailed requirements, specifications, or context for this request..." rows={4}></textarea>
             </div>
             <div className="pt-stack-sm flex justify-end gap-4 border-t border-white/5 mt-stack-md">
-              <button className="px-6 py-2.5 rounded-full font-body-md text-body-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-high transition-colors" type="button">
+              <button type="button" onClick={() => navigate(-1)} className="px-6 py-2.5 rounded-full font-body-md text-body-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-high transition-colors">
                 Cancel
               </button>
-              <button className="px-6 py-2.5 rounded-full font-body-md text-body-md text-on-primary bg-primary hover:bg-primary-fixed-dim transition-colors shadow-[0_0_15px_rgba(196,192,255,0.4)] flex items-center gap-2 group" type="button">
-                Next Step
-                <span className="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+              <button disabled={submitting} type="submit" className="px-6 py-2.5 rounded-full font-body-md text-body-md text-on-primary bg-primary hover:bg-primary-fixed-dim transition-colors shadow-[0_0_15px_rgba(196,192,255,0.4)] flex items-center gap-2 group disabled:opacity-50">
+                {submitting ? 'Creating...' : 'Submit RFQ'}
+                {!submitting && <span className="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>}
               </button>
             </div>
           </form>

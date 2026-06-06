@@ -1,7 +1,8 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: 'Overview', icon: 'grid_view', path: '/' },
@@ -30,7 +31,7 @@ export function Sidebar() {
       </div>
       
       <nav className="flex-1 flex flex-col gap-1 overflow-y-auto">
-        <button className="mb-6 w-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface py-3 rounded-full flex justify-center items-center gap-2 font-display-md text-label-caps border border-white/10 transition-all">
+        <button onClick={() => navigate('/rfqs')} className="mb-6 w-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface py-3 rounded-full flex justify-center items-center gap-2 font-display-md text-label-caps border border-white/10 transition-all">
           <span className="material-symbols-outlined text-[18px]">add</span>
           New Request
         </button>

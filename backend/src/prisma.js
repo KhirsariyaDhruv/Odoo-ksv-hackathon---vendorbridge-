@@ -1,13 +1,9 @@
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
-import pg from 'pg';
-const { Pool } = pg;
-import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  datasourceUrl: "file:./dev.db",
+});
 
 export default prisma;

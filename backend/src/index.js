@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import vendorRoutes from './routes/vendors.js';
 import rfqRoutes from './routes/rfqs.js';
+import quotationRoutes from './routes/quotations.js';
+import approvalRoutes from './routes/approvals.js';
 
 dotenv.config();
 
@@ -24,6 +26,8 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/rfqs', rfqRoutes);
+app.use('/api/quotations', quotationRoutes);
+app.use('/api/approvals', approvalRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'VendorBridge Backend is running' });

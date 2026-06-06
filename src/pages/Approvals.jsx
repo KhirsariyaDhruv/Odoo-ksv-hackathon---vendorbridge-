@@ -1,6 +1,59 @@
+import { useState, useEffect } from 'react';
+import api from '../api';
+
 export function Approvals() {
+  const [approvals, setApprovals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchApprovals = async () => {
+      try {
+        const response = await api.get('/approvals');
+        setApprovals(response.data);
+      } catch (err) {
+        setError('Failed to fetch pending approvals');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchApprovals();
+  }, []);
+
+  const handleStatusUpdate = async (id, status) => {
+    setSubmitting(true);
+    try {
+      await api.put(`/approvals/${id}/status`, { status });
+      // Remove from pending list
+      setApprovals(approvals.filter(a => a.id !== id));
+    } catch (err) {
+      alert('Failed to update status');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="p-8 text-on-surface-variant">Loading approvals...</div>;
+  }
+
+  if (approvals.length === 0) {
+    return (
+      <div className="max-w-5xl mx-auto space-y-stack-md animate-fade-in p-container-padding">
+        <div className="bg-surface-container border border-white/10 rounded-xl p-8 text-center text-on-surface-variant">
+          <span className="material-symbols-outlined text-4xl mb-2 opacity-50">fact_check</span>
+          <h2 className="font-display-md text-headline-sm text-on-surface mb-1">All Caught Up!</h2>
+          <p>You have no pending purchase orders awaiting your approval.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentPO = approvals[0];
+
   return (
-    <div className="max-w-5xl mx-auto space-y-stack-md animate-fade-in">
+    <div className="max-w-5xl mx-auto space-y-stack-md animate-fade-in p-container-padding">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>
@@ -8,15 +61,23 @@ export function Approvals() {
             <span className="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-surface-container-high text-on-surface-variant border border-white/5">Purchase Order</span>
             <span className="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary-fixed/10 text-secondary-fixed border border-secondary-fixed/20">Awaiting Your Approval</span>
           </div>
-          <h1 className="font-display-lg text-display-lg text-on-surface">PO-2024-8992</h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-1">Acme Corp Software Licensing Renewal</p>
+          <h1 className="font-display-lg text-display-lg text-on-surface">{currentPO.poNumber}</h1>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-1">{currentPO.quotation?.rfq?.title || 'System Generated PO'}</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button className="flex-1 md:flex-none px-6 py-2 rounded-lg bg-transparent border border-error/50 text-error hover:bg-error/10 font-label-caps transition-colors flex items-center justify-center gap-2">
+          <button 
+            onClick={() => handleStatusUpdate(currentPO.id, 'Rejected')}
+            disabled={submitting}
+            className="flex-1 md:flex-none px-6 py-2 rounded-lg bg-transparent border border-error/50 text-error hover:bg-error/10 font-label-caps transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+          >
             <span className="material-symbols-outlined text-sm">close</span> Reject
           </button>
-          <button className="flex-1 md:flex-none px-6 py-2 rounded-lg bg-tertiary-container text-on-tertiary-container font-label-caps hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(181,242,175,0.2)]">
-            <span className="material-symbols-outlined text-sm">check</span> Approve PO
+          <button 
+            onClick={() => handleStatusUpdate(currentPO.id, 'Approved')}
+            disabled={submitting}
+            className="flex-1 md:flex-none px-6 py-2 rounded-lg bg-tertiary-container text-on-tertiary-container font-label-caps hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(181,242,175,0.2)] disabled:opacity-50"
+          >
+            <span className="material-symbols-outlined text-sm">check</span> {submitting ? 'Approving...' : 'Approve PO'}
           </button>
         </div>
       </div>
@@ -44,36 +105,17 @@ export function Approvals() {
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-body-md text-on-surface text-sm font-semibold">Request Submitted</h3>
+                      <h3 className="font-body-md text-on-surface text-sm font-semibold">Quotation Approved</h3>
                       <p className="font-body-sm text-on-surface-variant text-xs mt-1">Initiated by System</p>
                     </div>
-                    <span className="font-mono-data text-mono-data text-on-surface-variant/50 text-xs">Oct 24, 09:00 AM</span>
+                    <span className="font-mono-data text-mono-data text-on-surface-variant/50 text-xs">
+                      {new Date(currentPO.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
               </div>
               
-              {/* Step 2: L1 Review */}
-              <div className="relative flex items-start gap-4 mb-8">
-                <div className="w-6 h-6 rounded-full bg-tertiary/20 border border-tertiary/50 flex items-center justify-center z-10 mt-0.5">
-                  <span className="material-symbols-outlined text-[14px] text-tertiary">check</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-body-md text-on-surface text-sm font-semibold">L1 Review</h3>
-                      <p className="font-body-sm text-tertiary text-xs mt-1 flex items-center gap-1">
-                        Rahul Mehta <span className="text-on-surface-variant">(Approved)</span>
-                      </p>
-                    </div>
-                    <span className="font-mono-data text-mono-data text-on-surface-variant/50 text-xs">Oct 25, 14:30 PM</span>
-                  </div>
-                  <div className="mt-3 p-3 bg-surface-container-lowest border border-white/5 rounded-lg">
-                    <p className="font-body-sm text-on-surface-variant text-xs italic">"Budget verified against Q4 allocations. Looks good to proceed."</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Step 3: L2 Approval (Active) */}
+              {/* Step 2: L2 Approval (Active) */}
               <div className="relative flex items-start gap-4 mb-8">
                 <div className="w-6 h-6 rounded-full bg-secondary-fixed border border-secondary-fixed flex items-center justify-center z-10 mt-0.5 shadow-[0_0_15px_rgba(255,219,206,0.4)]">
                   <span className="material-symbols-outlined text-[14px] text-on-secondary-fixed">hourglass_empty</span>
@@ -81,44 +123,15 @@ export function Approvals() {
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-body-md text-secondary-fixed text-sm font-semibold">L2 Approval</h3>
+                      <h3 className="font-body-md text-secondary-fixed text-sm font-semibold">PO Authorization</h3>
                       <p className="font-body-sm text-secondary-fixed/80 text-xs mt-1 flex items-center gap-1">
-                        Priya Shah <span className="text-on-surface-variant">(Awaiting)</span>
+                        Manager <span className="text-on-surface-variant">(Awaiting)</span>
                       </p>
                     </div>
                     <span className="font-mono-data text-mono-data text-secondary-fixed/50 text-xs">Current</span>
                   </div>
                 </div>
               </div>
-              
-              {/* Step 4: Generate PO */}
-              <div className="relative flex items-start gap-4">
-                <div className="w-6 h-6 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center z-10 mt-0.5">
-                  <span className="material-symbols-outlined text-[14px] text-on-surface-variant/30">receipt</span>
-                </div>
-                <div className="flex-1 opacity-50">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-body-md text-on-surface text-sm font-semibold">Generate PO</h3>
-                      <p className="font-body-sm text-on-surface-variant text-xs mt-1">System Action</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Remark Box */}
-          <div className="bg-surface/50 backdrop-blur-xl border border-white/10 shadow-inner rounded-xl p-6">
-            <h2 className="font-display-md text-body-lg font-semibold text-on-surface mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary-fixed-dim">edit_note</span>
-              Add Remark
-            </h2>
-            <textarea className="w-full bg-surface-container-lowest border border-white/10 rounded-lg p-4 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary min-h-[120px] resize-y placeholder:text-on-surface-variant/50 font-body-sm" placeholder="Enter your comments or reason for rejection here..."></textarea>
-            <div className="flex justify-end mt-3">
-              <button className="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-bright font-label-caps transition-colors text-xs">
-                Save Draft
-              </button>
             </div>
           </div>
         </div>
@@ -131,7 +144,7 @@ export function Approvals() {
             <div className="relative z-10">
               <div className="font-label-caps text-background/70 mb-2">Total PO Value</div>
               <div className="font-display-lg text-display-lg font-bold tracking-tight">
-                $84,500<span className="text-xl text-background/50">.00</span>
+                ${currentPO.amount?.toFixed(2)}
               </div>
               <div className="mt-4 flex items-center gap-2 text-sm font-medium bg-background/10 inline-flex px-3 py-1 rounded-full">
                 <span className="material-symbols-outlined text-sm">payments</span>
@@ -144,55 +157,16 @@ export function Approvals() {
           <div className="bg-surface/50 backdrop-blur-xl border border-white/10 shadow-inner rounded-xl p-5">
             <div className="font-label-caps text-on-surface-variant mb-4 flex justify-between items-center">
               Vendor Details
-              <span className="material-symbols-outlined text-sm cursor-pointer hover:text-primary">open_in_new</span>
             </div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded bg-primary-container/20 flex items-center justify-center text-primary border border-primary/20">
-                <span className="material-symbols-outlined">corporate_fare</span>
+              <div className="w-10 h-10 rounded bg-primary-container/20 flex items-center justify-center text-primary border border-primary/20 font-bold uppercase">
+                {currentPO.vendor?.init || 'V'}
               </div>
               <div>
-                <div className="font-body-md font-semibold text-on-surface text-sm">Acme Corp Ltd.</div>
-                <div className="font-body-sm text-on-surface-variant text-xs">VID-99281A</div>
+                <div className="font-body-md font-semibold text-on-surface text-sm">{currentPO.vendor?.name || 'Unknown'}</div>
+                <div className="font-body-sm text-on-surface-variant text-xs">Category: {currentPO.vendor?.category}</div>
               </div>
             </div>
-            <div className="space-y-3 pt-3 border-t border-white/5">
-              <div className="flex justify-between text-xs">
-                <span className="text-on-surface-variant">Category</span>
-                <span className="text-on-surface font-medium">Software / IT</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-on-surface-variant">Risk Score</span>
-                <span className="text-tertiary flex items-center gap-1"><span className="material-symbols-outlined text-[12px]">shield</span> Low</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-on-surface-variant">Contract Exp</span>
-                <span className="text-on-surface font-medium">Dec 31, 2025</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Line Items Summary */}
-          <div className="bg-surface/50 backdrop-blur-xl border border-white/10 shadow-inner rounded-xl p-5">
-            <div className="font-label-caps text-on-surface-variant mb-4">Line Items (2)</div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-start">
-                <div className="pr-4">
-                  <div className="font-body-md text-sm text-on-surface truncate">Enterprise License Renew...</div>
-                  <div className="font-body-sm text-xs text-on-surface-variant mt-0.5">Qty: 500 @ $120/ea</div>
-                </div>
-                <div className="font-mono-data text-sm text-on-surface whitespace-nowrap">$60,000</div>
-              </div>
-              <div className="flex justify-between items-start">
-                <div className="pr-4">
-                  <div className="font-body-md text-sm text-on-surface truncate">Premium Support SLA</div>
-                  <div className="font-body-sm text-xs text-on-surface-variant mt-0.5">Qty: 1 @ $24,500/ea</div>
-                </div>
-                <div className="font-mono-data text-sm text-on-surface whitespace-nowrap">$24,500</div>
-              </div>
-            </div>
-            <button className="w-full mt-4 py-2 border border-white/10 rounded-lg text-xs font-label-caps text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
-              View Full PR Document
-            </button>
           </div>
         </div>
       </div>

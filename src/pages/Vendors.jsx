@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../api';
 
 export function Vendors() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(searchParams.get('add') === 'true');
+  const [formData, setFormData] = useState({ name: '', init: '', category: '', gstNumber: '', email: '', phone: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -19,6 +25,36 @@ export function Vendors() {
     fetchVendors();
   }, []);
 
+  useEffect(() => {
+    if (searchParams.get('add') === 'true') {
+      setIsModalOpen(true);
+    }
+  }, [searchParams]);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSearchParams({});
+    setFormData({ name: '', init: '', category: '', gstNumber: '', email: '', phone: '' });
+    setError('');
+  };
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError('');
+    try {
+      const response = await api.post('/vendors', formData);
+      setVendors([response.data, ...vendors]);
+      closeModal();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to add vendor');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between items-end mb-stack-lg">
@@ -26,7 +62,7 @@ export function Vendors() {
           <h2 className="font-display-md text-headline-lg text-on-surface tracking-tight mb-2">Vendors Management</h2>
           <p className="font-body-md text-on-surface-variant">Manage your supplier network, track compliance, and view operational status.</p>
         </div>
-        <button className="bg-tertiary-container hover:bg-tertiary hover:text-on-tertiary text-on-tertiary-container px-6 py-3 rounded-full flex items-center gap-2 font-display-md text-body-sm font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(102,158,99,0.15)] hover:shadow-[0_0_30px_rgba(154,213,148,0.3)]">
+        <button onClick={() => setIsModalOpen(true)} className="bg-tertiary-container hover:bg-tertiary hover:text-on-tertiary text-on-tertiary-container px-6 py-3 rounded-full flex items-center gap-2 font-display-md text-body-sm font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(102,158,99,0.15)] hover:shadow-[0_0_30px_rgba(154,213,148,0.3)]">
           <span className="material-symbols-outlined text-[20px]">add</span>
           Add Vendor
         </button>
@@ -109,6 +145,64 @@ export function Vendors() {
           </table>
         </div>
       </div>
+
+      {/* Add Vendor Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="bg-surface-container-highest border border-white/10 rounded-2xl p-6 w-full max-w-lg shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-display-md text-headline-sm text-on-surface">Add New Vendor</h3>
+              <button onClick={closeModal} className="text-on-surface-variant hover:text-on-surface">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            
+            {error && <div className="mb-4 bg-error-container text-on-error-container p-3 rounded text-sm">{error}</div>}
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-xs font-medium text-on-surface-variant mb-1">Company Name</label>
+                  <input required name="name" value={formData.name} onChange={handleChange} type="text" className="w-full bg-surface-container border border-white/10 rounded-lg px-3 py-2 text-on-surface focus:border-primary outline-none" />
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-xs font-medium text-on-surface-variant mb-1">Initials (e.g. TC)</label>
+                  <input required name="init" value={formData.init} onChange={handleChange} maxLength="3" type="text" className="w-full bg-surface-container border border-white/10 rounded-lg px-3 py-2 text-on-surface focus:border-primary outline-none uppercase" />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-on-surface-variant mb-1">Category</label>
+                  <select required name="category" value={formData.category} onChange={handleChange} className="w-full bg-surface-container border border-white/10 rounded-lg px-3 py-2 text-on-surface focus:border-primary outline-none">
+                    <option value="">Select Category...</option>
+                    <option value="IT Services">IT Services</option>
+                    <option value="Logistics">Logistics</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                    <option value="Hardware">Hardware</option>
+                    <option value="Consulting">Consulting</option>
+                  </select>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-on-surface-variant mb-1">GST Number</label>
+                  <input required name="gstNumber" value={formData.gstNumber} onChange={handleChange} type="text" className="w-full bg-surface-container border border-white/10 rounded-lg px-3 py-2 text-on-surface focus:border-primary outline-none" />
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-xs font-medium text-on-surface-variant mb-1">Email</label>
+                  <input required name="email" value={formData.email} onChange={handleChange} type="email" className="w-full bg-surface-container border border-white/10 rounded-lg px-3 py-2 text-on-surface focus:border-primary outline-none" />
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-xs font-medium text-on-surface-variant mb-1">Phone</label>
+                  <input required name="phone" value={formData.phone} onChange={handleChange} type="text" className="w-full bg-surface-container border border-white/10 rounded-lg px-3 py-2 text-on-surface focus:border-primary outline-none" />
+                </div>
+              </div>
+              <div className="flex justify-end gap-3 mt-8">
+                <button type="button" onClick={closeModal} className="px-5 py-2 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+                <button type="submit" disabled={submitting} className="px-5 py-2 rounded-full bg-tertiary text-on-tertiary font-medium hover:bg-tertiary/90 transition-colors disabled:opacity-50">
+                  {submitting ? 'Adding...' : 'Add Vendor'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

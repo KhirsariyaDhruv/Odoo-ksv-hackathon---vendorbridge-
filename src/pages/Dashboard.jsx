@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom';
+
 export function Dashboard() {
+  const navigate = useNavigate();
   return (
     <>
       {/* Page Header & Actions */}
@@ -8,11 +11,11 @@ export function Dashboard() {
           <p className="font-body-md text-body-sm text-on-surface-variant">Welcome back. Here's what's happening with your supply chain today.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="bg-transparent hover:bg-surface-container-high text-on-surface border border-outline-variant/30 rounded-full py-2 px-4 flex items-center gap-2 transition-colors font-body-md text-body-sm">
+          <button onClick={() => navigate('/vendors?add=true')} className="bg-transparent hover:bg-surface-container-high text-on-surface border border-outline-variant/30 rounded-full py-2 px-4 flex items-center gap-2 transition-colors font-body-md text-body-sm">
             <span className="material-symbols-outlined text-[18px]">person_add</span>
             Add Vendor
           </button>
-          <button className="bg-primary hover:bg-primary-container text-on-primary rounded-full py-2 px-4 flex items-center gap-2 transition-colors font-body-md text-body-sm font-medium shadow-[0_0_15px_rgba(196,192,255,0.2)]">
+          <button onClick={() => navigate('/rfqs')} className="bg-primary hover:bg-primary-container text-on-primary rounded-full py-2 px-4 flex items-center gap-2 transition-colors font-body-md text-body-sm font-medium shadow-[0_0_15px_rgba(196,192,255,0.2)]">
             <span className="material-symbols-outlined text-[18px]">add</span>
             New RFQ
           </button>
