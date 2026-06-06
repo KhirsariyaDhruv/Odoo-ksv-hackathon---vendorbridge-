@@ -5,16 +5,16 @@ import api from '../api';
 export function POInvoices() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [order, setOrder] = useState(null);
+  const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [paying, setPaying] = useState(false);
 
   useEffect(() => {
-    const fetchOrder = async () => {
+    const fetchInvoice = async () => {
       try {
-        const response = await api.get(`/orders/${id}`);
-        setOrder(response.data);
+        const response = await api.get(`/invoices/${id}`);
+        setInvoice(response.data);
       } catch (err) {
         setError('Failed to fetch invoice details');
       } finally {
@@ -22,7 +22,7 @@ export function POInvoices() {
       }
     };
     if (id) {
-      fetchOrder();
+      fetchInvoice();
     } else {
       setLoading(false);
       setError('No invoice ID provided');
@@ -32,8 +32,8 @@ export function POInvoices() {
   const handleMarkAsPaid = async () => {
     setPaying(true);
     try {
-      await api.put(`/orders/${id}/status`, { status: 'Paid' });
-      setOrder({ ...order, status: 'Paid' });
+      await api.put(`/invoices/${id}/status`, { status: 'Paid' });
+      setInvoice({ ...invoice, status: 'Paid' });
     } catch (err) {
       alert('Failed to update status');
     } finally {
@@ -46,7 +46,7 @@ export function POInvoices() {
   };
 
   const handleEmail = () => {
-    alert(`Invoice sent to ${order?.vendor?.email || 'vendor'}`);
+    alert(`Invoice sent to ${invoice?.vendor?.email || 'vendor'}`);
   };
 
   const handleDownloadPDF = () => {
@@ -58,20 +58,20 @@ export function POInvoices() {
     return <div className="p-8 text-on-surface-variant">Loading invoice details...</div>;
   }
 
-  if (error || !order) {
+  if (error || !invoice) {
     return (
       <div className="p-8">
         <div className="text-error mb-4">{error || 'Invoice not found'}</div>
-        <button onClick={() => navigate('/orders')} className="text-primary hover:underline">
-          Back to Orders
+        <button onClick={() => navigate('/invoices')} className="text-primary hover:underline">
+          Back to Invoices
         </button>
       </div>
     );
   }
 
-  const isPaid = order.status === 'Paid';
-  const subtotal = order.amount * 0.82; // Reverse calculation assuming 18% tax
-  const tax = order.amount - subtotal;
+  const isPaid = invoice.status === 'Paid';
+  const subtotal = invoice.amount * 0.82; // Reverse calculation assuming 18% tax
+  const tax = invoice.amount - subtotal;
 
   return (
     <>
@@ -79,9 +79,9 @@ export function POInvoices() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-stack-md">
         <div>
           <div className="flex items-center gap-2 text-on-surface-variant font-body-sm text-label-caps mb-2">
-            <Link to="/orders" className="hover:text-primary transition-colors">Orders</Link>
+            <Link to="/invoices" className="hover:text-primary transition-colors">Invoices</Link>
             <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span className="text-primary">INV-{order.id.toString().padStart(4, '0')}</span>
+            <span className="text-primary">{invoice.invoiceNumber}</span>
           </div>
           <h1 className="font-display-lg text-headline-lg md:text-display-lg text-on-surface">Invoice Details</h1>
         </div>
@@ -130,12 +130,12 @@ export function POInvoices() {
               <span className="material-symbols-outlined text-3xl text-primary opacity-80">storefront</span>
             </div>
             <div>
-              <h2 className="font-display-md text-headline-lg-mobile text-on-surface print:text-black mb-1">{order.vendor?.name}</h2>
-              <p className="font-mono-data text-body-sm text-on-surface-variant print:text-gray-600">Vendor ID: V-{order.vendor?.id.toString().padStart(4, '0')}</p>
+              <h2 className="font-display-md text-headline-lg-mobile text-on-surface print:text-black mb-1">{invoice.vendor?.name}</h2>
+              <p className="font-mono-data text-body-sm text-on-surface-variant print:text-gray-600">Vendor ID: V-{invoice.vendor?.id.toString().padStart(4, '0')}</p>
               <div className="mt-3 font-body-sm text-body-sm text-on-surface-variant/80 print:text-gray-600">
-                Email: {order.vendor?.email}<br/>
-                Phone: {order.vendor?.phone}<br/>
-                GST: {order.vendor?.gstNumber}
+                Email: {invoice.vendor?.email}<br/>
+                Phone: {invoice.vendor?.phone}<br/>
+                GST: {invoice.vendor?.gstNumber}
               </div>
             </div>
           </div>
@@ -144,22 +144,22 @@ export function POInvoices() {
           <div className="grid grid-cols-2 gap-x-8 gap-y-4 md:text-right">
             <div>
               <div className="font-label-caps text-on-surface-variant print:text-gray-500 mb-1">Invoice Number</div>
-              <div className="font-mono-data text-body-md text-on-surface print:text-black">INV-{order.id.toString().padStart(4, '0')}</div>
+              <div className="font-mono-data text-body-md text-on-surface print:text-black">{invoice.invoiceNumber}</div>
             </div>
             <div>
               <div className="font-label-caps text-on-surface-variant print:text-gray-500 mb-1">PO Number</div>
-              <div className="font-mono-data text-body-md text-on-surface print:text-black">{order.poNumber}</div>
+              <div className="font-mono-data text-body-md text-on-surface print:text-black">{invoice.purchaseOrder?.poNumber}</div>
             </div>
             <div>
               <div className="font-label-caps text-on-surface-variant print:text-gray-500 mb-1">Issue Date</div>
               <div className="font-mono-data text-body-md text-on-surface print:text-black">
-                {new Date(order.createdAt).toLocaleDateString()}
+                {new Date(invoice.issuedDate).toLocaleDateString()}
               </div>
             </div>
             <div>
               <div className="font-label-caps text-on-surface-variant print:text-gray-500 mb-1">Due Date</div>
               <div className="font-mono-data text-body-md text-[#ffa17c] font-medium print:text-black">
-                {new Date(new Date(order.createdAt).getTime() + 30*24*60*60*1000).toLocaleDateString()}
+                {new Date(invoice.dueDate).toLocaleDateString()}
               </div>
             </div>
           </div>
@@ -193,8 +193,8 @@ export function POInvoices() {
             <tbody className="font-mono-data text-body-sm print:text-black">
               <tr className="border-b border-white/5 print:border-black/10 hover:bg-surface-container-high/20 transition-colors">
                 <td className="py-4 px-6 text-on-surface print:text-black">
-                  <div className="font-medium mb-1">{order.quotation?.rfq?.title || 'General Items'}</div>
-                  <div className="text-[12px] text-on-surface-variant/60 print:text-gray-500 font-body-sm">RFQ Reference: #{order.quotation?.rfq?.id || 'N/A'}</div>
+                  <div className="font-medium mb-1">{invoice.purchaseOrder?.quotation?.rfq?.title || 'General Items'}</div>
+                  <div className="text-[12px] text-on-surface-variant/60 print:text-gray-500 font-body-sm">RFQ Reference: #{invoice.purchaseOrder?.quotation?.rfq?.id || 'N/A'}</div>
                 </td>
                 <td className="py-4 px-6 text-right text-on-surface-variant print:text-gray-600">1</td>
                 <td className="py-4 px-6 text-right text-on-surface-variant print:text-gray-600">${subtotal.toFixed(2)}</td>

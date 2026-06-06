@@ -36,10 +36,29 @@ router.put('/:id/status', async (req, res) => {
       return res.status(400).json({ error: 'Invalid status' });
     }
 
+    const poId = parseInt(id);
+
     const po = await prisma.purchaseOrder.update({
-      where: { id: parseInt(id) },
-      data: { status }
+      where: { id: poId },
+      data: { status },
+      include: { vendor: true }
     });
+
+    if (status === 'Approved') {
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 30); // Net 30 terms
+
+      await prisma.invoice.create({
+        data: {
+          invoiceNumber: `INV-${Date.now().toString().slice(-6)}-${po.id}`,
+          purchaseOrderId: po.id,
+          vendorId: po.vendorId,
+          amount: po.amount,
+          dueDate: dueDate,
+          status: 'Pending Payment'
+        }
+      });
+    }
 
     res.json(po);
   } catch (error) {

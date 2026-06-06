@@ -8,6 +8,7 @@ import { Quotations } from './pages/Quotations';
 import { Approvals } from './pages/Approvals';
 import { Orders } from './pages/Orders';
 import { POInvoices } from './pages/POInvoices';
+import { Invoices } from './pages/Invoices';
 import { Reports } from './pages/Reports';
 import { Activity } from './pages/Activity';
 import { Help } from './pages/Help';
@@ -38,6 +39,7 @@ function AppContent() {
         <Route path="/quotations" element={<Quotations />} />
         <Route path="/approvals" element={<Approvals />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/invoices" element={<Invoices />} />
         <Route path="/invoices/:id" element={<POInvoices />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/activity" element={<Activity />} />
