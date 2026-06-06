@@ -9,6 +9,7 @@ import vendorRoutes from './routes/vendors.js';
 import rfqRoutes from './routes/rfqs.js';
 import quotationRoutes from './routes/quotations.js';
 import approvalRoutes from './routes/approvals.js';
+import orderRoutes from './routes/orders.js';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/vendors', vendorRoutes);
 app.use('/api/rfqs', rfqRoutes);
 app.use('/api/quotations', quotationRoutes);
 app.use('/api/approvals', approvalRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'VendorBridge Backend is running' });

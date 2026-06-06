@@ -38,7 +38,7 @@ function AppContent() {
         <Route path="/quotations" element={<Quotations />} />
         <Route path="/approvals" element={<Approvals />} />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/invoices" element={<POInvoices />} />
+        <Route path="/invoices/:id" element={<POInvoices />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/activity" element={<Activity />} />
         <Route path="/help" element={<Help />} />
