@@ -81,7 +81,7 @@ export function Dashboard() {
             <span className="material-symbols-outlined text-[18px]">person_add</span>
             Add Vendor
           </button>
-          <button onClick={() => navigate('/rfqs')} className="bg-primary hover:bg-primary-container text-on-primary rounded-full py-2 px-4 flex items-center gap-2 transition-colors font-body-md text-body-sm font-medium shadow-[0_0_15px_rgba(196,192,255,0.2)]">
+          <button onClick={() => navigate('/rfqs/create')} className="bg-primary hover:bg-primary-container text-on-primary rounded-full py-2 px-4 flex items-center gap-2 transition-colors font-body-md text-body-sm font-medium shadow-[0_0_15px_rgba(196,192,255,0.2)]">
             <span className="material-symbols-outlined text-[18px]">add</span>
             New RFQ
           </button>

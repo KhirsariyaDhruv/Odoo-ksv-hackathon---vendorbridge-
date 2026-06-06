@@ -31,7 +31,7 @@ export function Sidebar() {
       </div>
       
       <nav className="flex-1 flex flex-col gap-1 overflow-y-auto">
-        <button onClick={() => navigate('/rfqs')} className="mb-6 w-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface py-3 rounded-full flex justify-center items-center gap-2 font-display-md text-label-caps border border-white/10 transition-all">
+        <button onClick={() => navigate('/rfqs/create')} className="mb-6 w-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface py-3 rounded-full flex justify-center items-center gap-2 font-display-md text-label-caps border border-white/10 transition-all">
           <span className="material-symbols-outlined text-[18px]">add</span>
           New Request
         </button>

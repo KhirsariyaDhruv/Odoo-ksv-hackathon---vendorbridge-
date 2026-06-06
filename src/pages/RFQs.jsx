@@ -1,118 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 
 export function RFQs() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ title: '', category: '', deadline: '', description: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [rfqs, setRfqs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setError('');
-    try {
-      await api.post('/rfqs', formData);
-      setSuccess(true);
-      setTimeout(() => navigate('/dashboard'), 2000);
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create RFQ');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  useEffect(() => {
+    const fetchRfqs = async () => {
+      try {
+        const response = await api.get('/rfqs');
+        setRfqs(response.data);
+      } catch (error) {
+        console.error('Failed to fetch RFQs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRfqs();
+  }, []);
 
   return (
-    <div className="flex-1 p-container-padding flex justify-center pb-32 md:pb-container-padding animate-fade-in z-10 relative">
-      <div className="w-full max-w-4xl max-w-[800px]">
-        {/* Header */}
-        <div className="mb-stack-lg">
-          <h2 className="font-display-lg text-headline-lg md:text-display-lg text-on-surface mb-2">Create New RFQ</h2>
-          <p className="font-body-md text-body-lg text-on-surface-variant">Initiate a request for quotation to find the best vendors for your needs.</p>
+    <>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-stack-md">
+        <div>
+          <h1 className="font-display-md text-headline-lg font-semibold text-on-surface mb-1">RFQs</h1>
+          <p className="font-body-md text-body-sm text-on-surface-variant">Manage your Requests for Quotation.</p>
         </div>
-        
-        {/* Progress Stepper */}
-        <div className="mb-stack-lg relative">
-          <div className="absolute top-1/2 left-0 w-full h-0.5 bg-surface-container-highest -translate-y-1/2 z-0 rounded-full"></div>
-          <div className="absolute top-1/2 left-0 w-1/3 h-0.5 bg-primary -translate-y-1/2 z-0 rounded-full shadow-[0_0_10px_rgba(196,192,255,0.4)]"></div>
-          <div className="relative z-10 flex justify-between">
-            {/* Step 1: Active */}
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-display-md font-bold shadow-[0_0_15px_rgba(135,129,255,0.4)]">
-                1
-              </div>
-              <span className="font-body-md text-label-caps uppercase tracking-wider text-primary">Details</span>
-            </div>
-            {/* Step 2: Inactive */}
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant flex items-center justify-center font-display-md">
-                2
-              </div>
-              <span className="font-body-md text-label-caps uppercase tracking-wider text-on-surface-variant">Items</span>
-            </div>
-            {/* Step 3: Inactive */}
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant flex items-center justify-center font-display-md">
-                3
-              </div>
-              <span className="font-body-md text-label-caps uppercase tracking-wider text-on-surface-variant">Vendors</span>
-            </div>
-          </div>
-        </div>
-        
-        {/* Form Container */}
-        <div className="bg-surface/50 backdrop-blur-xl border border-white/10 shadow-inner rounded-xl p-stack-md relative overflow-hidden">
-          {/* Subtle top-left glow */}
-          <div className="absolute -top-20 -left-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-          {error && <div className="mb-4 bg-error-container text-on-error-container p-3 rounded text-sm relative z-10">{error}</div>}
-          {success && <div className="mb-4 bg-tertiary-container text-on-tertiary-container p-3 rounded text-sm relative z-10">RFQ created successfully! Redirecting...</div>}
-          
-          <form onSubmit={handleSubmit} className="space-y-stack-md relative z-10">
-            <div className="space-y-stack-sm">
-              <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="rfq-title">RFQ Title</label>
-              <input required name="title" value={formData.title} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/30 transition-all duration-200" id="rfq-title" placeholder="e.g., Q3 Office Furniture Refresh" type="text" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-              <div className="space-y-stack-sm">
-                <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="category">Category</label>
-                <div className="relative">
-                  <select required name="category" value={formData.category} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 pl-4 pr-10 text-body-md font-body-md text-on-surface appearance-none cursor-pointer transition-all duration-200" id="category">
-                    <option disabled value="">Select category...</option>
-                    <option value="furniture">Furniture & Fixtures</option>
-                    <option value="it">IT Equipment</option>
-                    <option value="services">Professional Services</option>
-                    <option value="raw">Raw Materials</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
-                </div>
-              </div>
-              <div className="space-y-stack-sm">
-                <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="deadline">Submission Deadline</label>
-                <div className="relative">
-                  <input required name="deadline" value={formData.deadline} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface transition-all duration-200 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 cursor-pointer" id="deadline" type="date" />
-                </div>
-              </div>
-            </div>
-            <div className="space-y-stack-sm">
-              <label className="block font-body-md text-body-sm text-on-surface-variant ml-1" htmlFor="description">Description & Requirements</label>
-              <textarea required name="description" value={formData.description} onChange={handleChange} className="w-full bg-surface-container-lowest border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/30 resize-none transition-all duration-200" id="description" placeholder="Provide detailed requirements, specifications, or context for this request..." rows={4}></textarea>
-            </div>
-            <div className="pt-stack-sm flex justify-end gap-4 border-t border-white/5 mt-stack-md">
-              <button type="button" onClick={() => navigate(-1)} className="px-6 py-2.5 rounded-full font-body-md text-body-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-high transition-colors">
-                Cancel
-              </button>
-              <button disabled={submitting} type="submit" className="px-6 py-2.5 rounded-full font-body-md text-body-md text-on-primary bg-primary hover:bg-primary-fixed-dim transition-colors shadow-[0_0_15px_rgba(196,192,255,0.4)] flex items-center gap-2 group disabled:opacity-50">
-                {submitting ? 'Creating...' : 'Submit RFQ'}
-                {!submitting && <span className="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>}
-              </button>
-            </div>
-          </form>
+        <button 
+          onClick={() => navigate('/rfqs/create')} 
+          className="px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors shadow-[0_0_15px_rgba(196,192,255,0.4)] flex items-center gap-2 font-label-caps"
+        >
+          <span className="material-symbols-outlined text-[18px]">add</span>
+          New Request
+        </button>
+      </div>
+
+      <div className="glass-panel rounded-3xl p-6">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="py-3 px-4 font-label-caps text-on-surface-variant font-semibold uppercase tracking-wider">RFQ ID</th>
+                <th className="py-3 px-4 font-label-caps text-on-surface-variant font-semibold uppercase tracking-wider">Title</th>
+                <th className="py-3 px-4 font-label-caps text-on-surface-variant font-semibold uppercase tracking-wider">Category</th>
+                <th className="py-3 px-4 font-label-caps text-on-surface-variant font-semibold uppercase tracking-wider">Deadline</th>
+                <th className="py-3 px-4 font-label-caps text-on-surface-variant font-semibold uppercase tracking-wider text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody className="font-body-sm text-body-sm text-on-surface">
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="py-8 text-center text-on-surface-variant">Loading RFQs...</td>
+                </tr>
+              ) : rfqs.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="py-8 text-center text-on-surface-variant">No RFQs found. Click "New Request" to create one.</td>
+                </tr>
+              ) : (
+                rfqs.map((rfq) => (
+                  <tr key={rfq.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-4 font-mono-data font-medium text-primary">#{rfq.id.toString().padStart(4, '0')}</td>
+                    <td className="py-4 px-4 font-medium">{rfq.title}</td>
+                    <td className="py-4 px-4 text-on-surface-variant capitalize">{rfq.category}</td>
+                    <td className="py-4 px-4 text-on-surface-variant">{new Date(rfq.deadline).toLocaleDateString()}</td>
+                    <td className="py-4 px-4 text-center">
+                      <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full border text-[11px] font-medium tracking-wide ${rfq.status === 'Open' ? 'bg-primary/10 border-primary/20 text-primary' : 'bg-surface-variant border-outline-variant/30 text-on-surface-variant'}`}>
+                        {rfq.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
+    </>
   );
 }
