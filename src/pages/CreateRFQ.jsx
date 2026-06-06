@@ -65,7 +65,7 @@ export function CreateRFQ() {
     try {
       await api.post('/rfqs', { ...formData, items, vendorIds });
       setSuccess(true);
-      setTimeout(() => navigate('/dashboard'), 2000);
+      setTimeout(() => navigate('/rfqs'), 2000);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create RFQ');
     } finally {
